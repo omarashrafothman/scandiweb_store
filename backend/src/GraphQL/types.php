@@ -12,8 +12,17 @@ use GraphQL\Type\Definition\Type;
 $attributeType = new ObjectType([
     'name' => 'Attribute',
     'fields' => [
-        'id' => Type::int(),
+        // 'id' => Type::int(),
         'name' => Type::string(),
+        'value' => Type::string(),
+    ],
+]);
+
+$attributeItemType = new ObjectType([
+    'name' => 'Attribute_item',
+    'fields' => [
+        'id' => Type::int(),
+        'display_value' => Type::string(),
         'value' => Type::string(),
     ],
 ]);
@@ -21,8 +30,17 @@ $attributeType = new ObjectType([
 $galleryType = new ObjectType([
     'name' => 'Gallery',
     'fields' => [
-        'product_id' => Type::string(),
+        'sku_id' => Type::int(),
         'image_url' => Type::string(),
+    ],
+]);
+$pricesType = new ObjectType([
+    'name' => 'prices',
+    'fields' => [
+        'product_id' => Type::int(),
+        'amount' => Type::string(),
+        'currency_label' => Type::string(),
+        'currency_symbol' => Type::string()
     ],
 ]);
 
@@ -37,26 +55,30 @@ $categoryType = new ObjectType([
     },
 ]);
 
+
 $productType = new ObjectType([
     'name' => 'Product',
-    'fields' => function () use (&$categoryType, &$attributeType, &$galleryType) {
+    'fields' => function () use (&$categoryType, &$attributeType, &$galleryType, $pricesType) {
         return [
+            'sku_id' => Type::int(),
             'id' => Type::string(),
             'name' => Type::string(),
-            'price' => [
-                'type' => Type::float(),
-                'resolve' => function ($product) {
-                    return $product->prices ? $product->prices->amount : null;
-                },
-            ],
+            'prices' => Type::listOf($pricesType),
+
+
             'description' => Type::string(),
             'attributes' => Type::listOf($attributeType),
             'galleries' => Type::listOf($galleryType),
-
+            'in_stock' => Type::boolean(),
             'category' => $categoryType,
         ];
-    },
+    }
 ]);
+
+
+
+
+
 
 
 

@@ -2,7 +2,7 @@
 class Database
 {
     private $host = "localhost";
-    private $db_name = "scandiweb";
+    private $db_name = "scandiweb_db";
     private $username = "root";
     private $password = "";
     public $conn;

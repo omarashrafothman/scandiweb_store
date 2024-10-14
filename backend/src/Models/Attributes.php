@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Attributes extends Model
 {
 
-    protected $fillable = ['product_id', 'name', 'type'];
+    protected $fillable = ['sku_id', 'name', 'type'];
 
     protected $table = "attributes";
 
@@ -14,7 +14,7 @@ class Attributes extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'sku_id');
     }
 
     public function attributesItems()

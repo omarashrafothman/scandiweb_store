@@ -10,7 +10,7 @@ $rootQuery = new ObjectType([
         "categories" => [
             "type" => Type::listOf($categoryType),
             "resolve" => function () {
-                return Category::with('products.attributes', 'products.galleries')->get(); // جلب جميع الفئات مع المنتجات
+                return Category::with('products.attributes', 'products.galleries', 'products.prices')->get(); // جلب جميع الفئات مع المنتجات
             },
         ],
         "category" => [
@@ -19,23 +19,35 @@ $rootQuery = new ObjectType([
                 "id" => Type::int(),
             ],
             "resolve" => function ($root, $args) {
-                return Category::with('products.attributes', 'products.galleries')->find($args["id"]); // جلب فئة معينة مع المنتجات
+                return Category::with('products.attributes', 'products.galleries', 'products.prices')->find($args["id"]); // جلب فئة معينة مع المنتجات
             },
         ],
-        "products" => [
-            "type" => Type::listOf($productType),
-            "resolve" => function () {
-                return Product::with('attributes')->get(); // جلب جميع المنتجات مع الخصائص والمعرض
-            },
+        'products' => [
+            'type' => Type::listOf($productType),
+            'resolve' => function () {
+                try {
+                    // جلب المنتجات مع السمات باستخدام علاقة sku_id
+                    return Product::with(['category', 'attributes', 'prices'])->get();
+                } catch (Exception $e) {
+                    throw new \GraphQL\Error\Error('فشل في جلب المنتجات: ' . $e->getMessage());
+                }
+            }
         ],
         "product" => [
             "type" => $productType,
             "args" => [
-                "id" => Type::string(),
+                "sku_id" => Type::int(),
             ],
             "resolve" => function ($root, $args) {
-                return Product::with('attributes', 'prices')->find($args["id"]);
+                return Product::with(['attributes', 'galleries', 'prices'])->where('sku_id', $args["sku_id"])->first();
             },
         ],
     ],
 ]);
+
+
+
+
+
+
+

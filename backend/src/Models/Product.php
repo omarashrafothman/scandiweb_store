@@ -12,6 +12,21 @@ class Product extends Model
     public $timestamps = false;
 
     //relationships
+
+
+    protected $primaryKey = 'sku_id'; // تحديد الـ primary key
+
+    // علاقة مع الـ Attributes
+    public function attributes()
+    {
+        return $this->hasMany(Attributes::class, 'sku_id');
+    }
+
+    // علاقة مع الـ Prices
+    public function prices()
+    {
+        return $this->hasMany(Prices::class, 'product_id'); // تأكد من أن 'product_id' هو العمود الصحيح
+    }
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -19,18 +34,14 @@ class Product extends Model
 
     public function galleries()
     {
-        return $this->hasMany(Gallery::class);
+        return $this->hasMany(Gallery::class, 'sku_id');
     }
 
 
-    public function attributes()
-    {
-        return $this->hasMany(Attributes::class);
-    }
 
-    public function prices()
+    public function cart_items()
     {
-        return $this->hasOne(Prices::class);  // Assuming each product has one price
+        return $this->hasMany(CartItem::class, 'sku_id');  // Assuming each product has one price
     }
 
 }

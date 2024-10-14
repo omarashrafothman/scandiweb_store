@@ -10,7 +10,7 @@ class ProductController
         $this->conn = $this->database->getConnection();
     }
 
- 
+
 
     // Method to get all cart items for a user
     public function getCartItems($user_id)

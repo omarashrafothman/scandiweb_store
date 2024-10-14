@@ -6,7 +6,7 @@ class Cart extends Model
 
     protected $fillable = ['total_price', 'created_at', 'updated_at'];
 
-    protected $table = "cart";
+    protected $table = "carts";
 
 
     public $timestamps = false;

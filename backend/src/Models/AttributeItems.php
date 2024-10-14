@@ -14,7 +14,7 @@ class AttributeItems extends Model
 
     public function attribute()
     {
-        return $this->belongsTo(Attributes::class);
+        return $this->belongsTo(Attributes::class, 'product_id', 'sku_id');
     }
 
 
